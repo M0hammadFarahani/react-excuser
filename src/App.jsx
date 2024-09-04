@@ -6,11 +6,16 @@ import { useState } from "react";
 function App() {
 
   const [excuse, setExcuse] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleClick = (e) => {
+    setIsLoading(true)
     fetch(`https://excuser-three.vercel.app/v1/excuse/${e.target.value}`)
     .then(res => res.json())
-    .then(data => setExcuse(data[0].excuse))
+    .then(data => {
+      setIsLoading(false)
+      setExcuse(data[0].excuse)
+    })
   }
 
   return (
@@ -24,7 +29,14 @@ function App() {
       </div>
 
       <div className="w-75 p-5 mx-auto border rounded">
-        <h2>{excuse}</h2>
+        {
+          isLoading ?
+          <div class="spinner-border" role="status">
+            <span class="sr-only"></span>
+          </div>
+          :
+          <h2>{excuse}</h2>
+        }
       </div>
     </div>
   )
